@@ -1,0 +1,37 @@
+{
+  block(
+    hash: "0x41dc080fa11a95ae14c942cf7675f39282cd5df93d4b01a57cd51ba22c659c5e"
+  ) {
+    number
+    timestamp
+    gasLimit
+    gasUsed
+    transactions {
+      #(filter: {addresses: [{to: "0x00000000000000adc04c56bf30ac9d3c0aaf14dc"}]})
+      hash
+      index
+      from {
+        address
+      }
+      to {
+        address
+      }
+      value
+      gas
+      gasPrice
+      maxFeePerGas
+      maxPriorityFeePerGas
+      gasUsed
+      status
+      inputData
+      logs {
+        index
+        account {
+          address
+        }
+        topics
+        data
+      }
+    }
+  }
+}
