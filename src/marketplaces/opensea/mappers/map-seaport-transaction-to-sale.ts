@@ -1,4 +1,4 @@
-import { Fee, Sale } from 'src/models/sale';
+import { Sale } from 'src/models/sale';
 import { OrderFulfilledLog } from '../models/order-fulfilled';
 import { Transaction } from 'src/models/transaction';
 import { Marketplace } from 'src/models/marketplace';
@@ -21,12 +21,7 @@ export function mapSeaportTransactionToSale(
         const orderFulfilledLog = orderFulfilledLogs[i];
 
         sales.push(
-          mapOrderFulfilledToSale(
-            orderFulfilledLog,
-            transaction.hash,
-            block.timestamp,
-            block.number
-          )
+          mapOrderFulfilledToSale(block, transaction, orderFulfilledLog)
         );
       }
 
@@ -39,52 +34,65 @@ export function mapSeaportTransactionToSale(
   }
 
   return orderFulfilledLogs.map((log) =>
-    mapOrderFulfilledToSale(
-      log,
-      transaction.hash,
-      block.timestamp,
-      block.number
-    )
+    mapOrderFulfilledToSale(block, transaction, log)
   );
 }
 
 function mapOrderFulfilledToSale(
-  orderFulfilledLog: OrderFulfilledLog,
-  transactionHash: string,
-  blockTimestamp: number,
-  blockNumber: number
+  block: Block,
+  transaction: Transaction,
+  orderFulfilledLog: OrderFulfilledLog
 ): Sale {
-  const offerItem = orderFulfilledLog.offer[0];
-  const considerationItems = mapConsiderationItemsToSale(orderFulfilledLog);
-
-  // TODO: protocol and royalty fee need to be flipped MAYBE
-  // TODO: offerItem contains the sellerFee
-  // TODO: first consideration item is the token and contract address
+  const considerationItems =
+    mapOfferAndConsiderationItemsToSale(orderFulfilledLog);
 
   return {
-    transactionHash: transactionHash,
+    transactionHash: transaction.hash,
     marketplace: Marketplace.SEAPORT,
     buyerAddress: orderFulfilledLog.offerer,
     sellerAddress: orderFulfilledLog.recipient,
-    sellerFee: {
-      amount: offerItem.amount,
-      tokenAddress: offerItem.token,
-    },
-    blockNumber,
-    blockTimestamp,
+    blockNumber: block.number,
+    blockTimestamp: block.timestamp,
     ...considerationItems,
   } as Sale;
 }
+/**
+ * If recipient initiated the transaction, then:
+ * - offer is the NFT
+ * - First consideration item is the ETH being spent
+ *
+ * If offerer initiated the transaction, then:
+ * - offer is the ETH being spent
+ * - First consideration item is the NFT
+ * @param orderFulfilledLog
+ * @returns
+ */
 
-function mapConsiderationItemsToSale(
+function mapOfferAndConsiderationItemsToSale(
   orderFulfilledLog: OrderFulfilledLog
 ): Partial<Sale> {
+  const offerItem = orderFulfilledLog.offer[0];
+  // TODO: This is probably not the best way to determine who (offerer or recipient) finished the transaction, change it.
+  const isOfferItemAnNFT = offerItem.itemType > 1;
   const partialSale: Partial<Sale> = {};
 
   for (const considerationItem of orderFulfilledLog.consideration) {
     if (considerationItem.recipient === orderFulfilledLog.offerer) {
-      partialSale.contractAddress = considerationItem.token;
-      partialSale.tokenId = considerationItem.identifier;
+      if (isOfferItemAnNFT) {
+        partialSale.contractAddress = offerItem.token;
+        partialSale.tokenId = offerItem.identifier;
+        partialSale.sellerFee = {
+          amount: considerationItem.amount,
+          tokenAddress: considerationItem.token,
+        };
+      } else {
+        partialSale.contractAddress = considerationItem.token;
+        partialSale.tokenId = considerationItem.identifier;
+        partialSale.sellerFee = {
+          amount: offerItem.amount,
+          tokenAddress: offerItem.token,
+        };
+      }
     } else if (considerationItem.recipient === OPENSEA_FEE_COLLECTOR) {
       partialSale.protocolFee = {
         amount: considerationItem.amount,

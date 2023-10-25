@@ -1,7 +1,11 @@
 import { Transaction } from 'src/models/transaction';
 import { mapLog } from './map-log';
 
-export function mapTransaction(trx: any): Transaction {
+export function mapTransaction(trx: any): Transaction | null {
+  if (trx.to == null) {
+    return null;
+  }
+
   return {
     hash: trx.hash,
     index: trx.index,

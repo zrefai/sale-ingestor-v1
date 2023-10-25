@@ -18,9 +18,13 @@ export class IngestTransaction {
     const sales: Sale[] = [];
 
     for (const transaction of transactions) {
-      switch (transaction.to.address as Marketplace) {
-        case Marketplace.SEAPORT:
-          sales.push(...this.seaportTransaction.ingestTransaction(transaction));
+      if (transaction) {
+        switch (transaction.to.address as Marketplace) {
+          case Marketplace.SEAPORT:
+            sales.push(
+              ...this.seaportTransaction.ingestTransaction(transaction)
+            );
+        }
       }
     }
 

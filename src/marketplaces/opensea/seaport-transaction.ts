@@ -14,6 +14,7 @@ import { Block } from 'src/models/block';
 import { OrdersMatchedLog } from './models/orders-matched';
 import { mapOrdersMatchedLog } from './mappers/map-orders-matched-log';
 import { mapSeaportTransactionToSale } from './mappers/map-seaport-transaction-to-sale';
+import util from 'util';
 
 export class SeaportTransaction {
   block: Block;
@@ -30,6 +31,7 @@ export class SeaportTransaction {
       value: parseEther('1.0'),
     });
 
+    console.log(parsedTransaction?.name);
     switch (parsedTransaction?.name as SeaportAbiMethodNames) {
       case 'fulfillAdvancedOrder':
       case 'fulfillAvailableAdvancedOrders':
@@ -38,6 +40,8 @@ export class SeaportTransaction {
       case 'fulfillBasicOrder_efficient_6GL6yc':
       case 'fulfillOrder': {
         const logs = this.ingestTransactionLogs(transaction.logs);
+        console.log(util.inspect(logs, false, null, true));
+
         // TODO: Maybe get the NFT address that is being interacted with here and cross check against the dictionary of addresses we want to log sales for
         // return mapSeaportTransactionToSale(this.block, transaction, logs);
         return mapSeaportTransactionToSale(this.block, transaction, logs);
@@ -46,6 +50,10 @@ export class SeaportTransaction {
       case 'matchAdvancedOrders': {
         const { orderFulfilledLogs, orderMatchedLog } =
           this.ingestTransactionMatchedLogs(transaction.logs, transaction.hash);
+        console.log(util.inspect(orderFulfilledLogs, false, null, true));
+        console.log(util.inspect(orderMatchedLog, false, null, true));
+
+        // console.log(util.inspect(orderFulfilledLogs, false, null, true));
 
         return mapSeaportTransactionToSale(
           this.block,

@@ -5,5 +5,5 @@ export interface Block {
   timestamp: number;
   gasLimit: number;
   gasUsed: number;
-  transactions: Transaction[];
+  transactions: (Transaction | null)[];
 }

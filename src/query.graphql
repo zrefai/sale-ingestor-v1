@@ -1,13 +1,14 @@
 {
-  block(
-    hash: "0x41dc080fa11a95ae14c942cf7675f39282cd5df93d4b01a57cd51ba22c659c5e"
-  ) {
+  block {
     number
     timestamp
     gasLimit
     gasUsed
-    transactions {
-      #(filter: {addresses: [{to: "0x00000000000000adc04c56bf30ac9d3c0aaf14dc"}]})
+    transactions(
+      filter: {
+        addresses: [{ to: "0x00000000000000adc04c56bf30ac9d3c0aaf14dc" }]
+      }
+    ) {
       hash
       index
       from {
