@@ -106,6 +106,49 @@ cb5a6750cf6096ec459ce054324c46803b503d9e2414e8e1ada5871aefd2685a
 000000000000000000000000b14276d8da92bd0c71506f62c27827d072bb38f9
 ```
 
+Data for this will come from Alchemy's Webhooks. Here is the query we are using:
+
+```graphql
+{
+  block {
+    number
+    timestamp
+    gasLimit
+    gasUsed
+    transactions(
+      filter: {
+        addresses: [{ to: "0x00000000000000adc04c56bf30ac9d3c0aaf14dc" }]
+      }
+    ) {
+      hash
+      index
+      from {
+        address
+      }
+      to {
+        address
+      }
+      value
+      gas
+      gasPrice
+      maxFeePerGas
+      maxPriorityFeePerGas
+      gasUsed
+      status
+      inputData
+      logs {
+        index
+        account {
+          address
+        }
+        topics
+        data
+      }
+    }
+  }
+}
+```
+
 ### OpenSea
 
 - **Seaport 1.5 Contract Address**: 0x00000000000000ADc04C56Bf30aC9d3c0aAF14dC

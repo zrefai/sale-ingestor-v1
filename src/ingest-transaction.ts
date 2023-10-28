@@ -18,7 +18,8 @@ export class IngestTransaction {
     const sales: Sale[] = [];
 
     for (const transaction of transactions) {
-      if (transaction) {
+      // When transaction status is 0, that means the transaction was cancelled on the blockchain
+      if (transaction && transaction.status === 1) {
         switch (transaction.to.address as Marketplace) {
           case Marketplace.SEAPORT:
             sales.push(

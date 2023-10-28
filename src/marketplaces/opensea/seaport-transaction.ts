@@ -5,7 +5,6 @@ import {
   SeaportAbiMethodNames,
   ORDER_FULFILLED_KECCAK_HASH,
   ORDERS_MATCHED_KECCAK_HASH,
-  SeaportAbiEvents,
 } from './seaport-abi';
 import { Log } from 'src/models/log';
 import { OrderFulfilledLog } from './models/order-fulfilled';
@@ -14,7 +13,6 @@ import { Block } from 'src/models/block';
 import { OrdersMatchedLog } from './models/orders-matched';
 import { mapOrdersMatchedLog } from './mappers/map-orders-matched-log';
 import { mapSeaportTransactionToSale } from './mappers/map-seaport-transaction-to-sale';
-import util from 'util';
 
 export class SeaportTransaction {
   block: Block;
@@ -25,41 +23,35 @@ export class SeaportTransaction {
     this.block = block;
   }
 
+  /**
+   * Given a valid transaction executed using the appropriate ABI method, it will return a list of sales that occurred during this transaction.
+   * @param transaction A ETH blockchain transaction
+   * @returns A list of sales that occurred during the transaction
+   */
   ingestTransaction(transaction: Transaction) {
     const parsedTransaction = seaportInterface.parseTransaction({
       data: transaction.inputData,
       value: parseEther('1.0'),
     });
 
-    console.log(parsedTransaction?.name);
+    // These ABI methods are used to process a sale based on Seaport's protocol. If any transaction executed one of these ABI methods, we should convert it into a sale
     switch (parsedTransaction?.name as SeaportAbiMethodNames) {
       case 'fulfillAdvancedOrder':
       case 'fulfillAvailableAdvancedOrders':
       case 'fulfillAvailableOrders':
       case 'fulfillBasicOrder':
       case 'fulfillBasicOrder_efficient_6GL6yc':
-      case 'fulfillOrder': {
-        const logs = this.ingestTransactionLogs(transaction.logs);
-        console.log(util.inspect(logs, false, null, true));
-
-        // TODO: Maybe get the NFT address that is being interacted with here and cross check against the dictionary of addresses we want to log sales for
-        // return mapSeaportTransactionToSale(this.block, transaction, logs);
-        return mapSeaportTransactionToSale(this.block, transaction, logs);
-      }
+      case 'fulfillOrder':
       case 'matchOrders':
       case 'matchAdvancedOrders': {
-        const { orderFulfilledLogs, orderMatchedLog } =
-          this.ingestTransactionMatchedLogs(transaction.logs, transaction.hash);
-        console.log(util.inspect(orderFulfilledLogs, false, null, true));
-        console.log(util.inspect(orderMatchedLog, false, null, true));
-
-        // console.log(util.inspect(orderFulfilledLogs, false, null, true));
+        const { orderFulfilledLogs, ordersMatchedLog } =
+          this.parseTransactionLogs(transaction.logs, transaction.hash);
 
         return mapSeaportTransactionToSale(
           this.block,
           transaction,
           orderFulfilledLogs,
-          orderMatchedLog
+          ordersMatchedLog
         );
       }
       default:
@@ -67,8 +59,22 @@ export class SeaportTransaction {
     }
   }
 
-  ingestTransactionLogs(logs: Log[]): OrderFulfilledLog[] {
-    const orderFulfilledLogs: OrderFulfilledLog[] = [];
+  /**
+   * Parses transactions logs into a more readable format using ethers. OrderFulfilled and OrdersMatched logs are the only logs parsed. Any other logs we do not need.
+   * @param logs The logs of a transaction to parse
+   * @param transactionHash Hash of the transaction, used for error handling
+   * @returns Object that contains the OrderFulfilled logs and OrdersMatched log if it is available
+   */
+  parseTransactionLogs(
+    logs: Log[],
+    transactionHash: string
+  ): {
+    orderFulfilledLogs: OrderFulfilledLog[];
+    ordersMatchedLog: OrdersMatchedLog | undefined;
+  } {
+    const orderFulfilledLogs = [];
+    let isOrdersMatchedKeccakAvailable = false;
+    let ordersMatchedLog = undefined;
 
     for (const log of logs) {
       if (log.topics[0] === ORDER_FULFILLED_KECCAK_HASH) {
@@ -77,57 +83,39 @@ export class SeaportTransaction {
           data: log.data,
         });
 
-        if (parsedLog) orderFulfilledLogs.push(mapOrderFulfilledLog(parsedLog));
-      }
-    }
-
-    return orderFulfilledLogs;
-  }
-
-  // Transaction with group buy and using matchAdvancedOrders https://etherscan.io/tx/0x8e4612be02d283d57a279e7e4e6bd9ee1ccd910ff154fe9a8700e94b1378477d#eventlog
-  ingestTransactionMatchedLogs(
-    logs: Log[],
-    transactionHash: string
-  ): {
-    orderFulfilledLogs: OrderFulfilledLog[];
-    orderMatchedLog: OrdersMatchedLog;
-  } {
-    const orderFulfilledLogs = [];
-    let orderMatchedLog = undefined;
-
-    for (const log of logs) {
-      if (
-        log.topics[0] === ORDER_FULFILLED_KECCAK_HASH ||
-        log.topics[0] === ORDERS_MATCHED_KECCAK_HASH
-      ) {
+        if (parsedLog) {
+          orderFulfilledLogs.push(mapOrderFulfilledLog(parsedLog));
+        }
+      } else if (log.topics[0] === ORDERS_MATCHED_KECCAK_HASH) {
+        isOrdersMatchedKeccakAvailable = true;
         const parsedLog = seaportInterface.parseLog({
           topics: log.topics,
           data: log.data,
         });
 
-        if (
-          parsedLog &&
-          (parsedLog.name as SeaportAbiEvents) === 'OrderFulfilled'
-        ) {
-          orderFulfilledLogs.push(mapOrderFulfilledLog(parsedLog));
-        } else if (
-          parsedLog &&
-          (parsedLog.name as SeaportAbiEvents) === 'OrdersMatched'
-        ) {
-          orderMatchedLog = mapOrdersMatchedLog(parsedLog);
+        if (parsedLog) {
+          ordersMatchedLog = mapOrdersMatchedLog(parsedLog);
         }
       }
     }
 
-    if (orderMatchedLog) {
-      return {
-        orderFulfilledLogs,
-        orderMatchedLog,
-      };
-    } else {
-      throw new Error(
-        `No OrdersMatched log was found in the transaction: ${transactionHash}`
-      );
+    // When keccak hash for OrdersMatched log was found, we need to ensure that an OrdersMatched log was parsed properly
+    if (isOrdersMatchedKeccakAvailable) {
+      if (ordersMatchedLog) {
+        return {
+          orderFulfilledLogs,
+          ordersMatchedLog,
+        };
+      } else {
+        throw new Error(
+          `No OrdersMatched log was found in the transaction: ${transactionHash}`
+        );
+      }
     }
+
+    return {
+      orderFulfilledLogs,
+      ordersMatchedLog,
+    };
   }
 }

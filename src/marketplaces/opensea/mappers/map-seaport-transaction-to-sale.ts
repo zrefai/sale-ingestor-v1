@@ -7,6 +7,14 @@ import { OrdersMatchedLog } from '../models/orders-matched';
 
 const OPENSEA_FEE_COLLECTOR = '0x0000a26b00c1F0DF003000390027140000fAa719';
 
+/**
+ * Converts the OrderFulfilled logs and OrdersMatched log into Sales. If a list of OrderFulfilled logs is only provided, it will map over each OrderFulfilled log and convert it into a Sale. If both a list of OrderFulfilled logs and an OrdersMatched log is provided, it will use the OrdersMatched log to determine what OrderFulfilled logs are converted into a Sale.
+ * @param block The block the transaction occurred in.
+ * @param transaction The transaction the OrderFulfilled log occurred in.
+ * @param orderFulfilledLogs The list of OrderFulfilled logs from a transaction.
+ * @param ordersMatchedLog The OrdersMatched log from the transaction if it is available
+ * @returns A list of Sales that occurred during a transaction
+ */
 export function mapSeaportTransactionToSale(
   block: Block,
   transaction: Transaction,
@@ -38,6 +46,13 @@ export function mapSeaportTransactionToSale(
   );
 }
 
+/**
+ * Maps information from the block, transaction, and OrderFulfilled log to a Sale. Uses mapOfferAndConsiderationItemsToSale to fill in properties that are equivalent to the offer and consideration items from an OrderFulfilled log.
+ * @param block The block the transaction occurred in.
+ * @param transaction The transaction the OrderFulfilled log occurred in.
+ * @param orderFulfilledLog The log containing information about the sale.
+ * @returns A Sale
+ */
 function mapOrderFulfilledToSale(
   block: Block,
   transaction: Transaction,
@@ -49,25 +64,19 @@ function mapOrderFulfilledToSale(
   return {
     transactionHash: transaction.hash,
     marketplace: Marketplace.SEAPORT,
-    buyerAddress: orderFulfilledLog.offerer,
-    sellerAddress: orderFulfilledLog.recipient,
+    buyerAddress: orderFulfilledLog.recipient,
+    sellerAddress: orderFulfilledLog.offerer,
     blockNumber: block.number,
     blockTimestamp: block.timestamp,
     ...considerationItems,
   } as Sale;
 }
-/**
- * If recipient initiated the transaction, then:
- * - offer is the NFT
- * - First consideration item is the ETH being spent
- *
- * If offerer initiated the transaction, then:
- * - offer is the ETH being spent
- * - First consideration item is the NFT
- * @param orderFulfilledLog
- * @returns
- */
 
+/**
+ * Maps offer and consideration items to a sale. If the offer item is the NFT and the first consideration item is ETH (i.e. the ETH being spent on the NFT) then the recipient initiated the transaction; meaning that they purchased a listed NFT. If the offer item is ETH and the first consideration item is the NFT, then the offerer initiated the transaction; meaning they accepted an offer on the NFT. Only these properties are mapped from an OrderFulfilled log to a Sale: the contractAddress, tokenId, sellerFee, protocolFee, and royaltyFee.
+ * @param orderFulfilledLog The OrderFulfilled log to map.
+ * @returns A partial Sale, where only the contractAddress, tokenId, sellerFee, protocolFee, and royaltyFee are mapped.
+ */
 function mapOfferAndConsiderationItemsToSale(
   orderFulfilledLog: OrderFulfilledLog
 ): Partial<Sale> {

@@ -1,23 +1,109 @@
 [
   {
-    "transactionHash": "0x3144aaa233ea0617cb452f46f0c32451cf47b2f59446c5f312d2eb2557cb3d97",
+    "transactionHash": "0xfd96aa64b1c1a28a231d7c167a058fbce3d910152facf5114a9a0e07208f7d45",
     "marketplace": "0x00000000000000adc04c56bf30ac9d3c0aaf14dc",
-    "buyerAddress": "0xA71061DAB2228346D89cCcC11BDa8629cE898251",
-    "sellerAddress": "0xD5A32105983260b7dd73114305dD1443ca634fE5",
-    "blockNumber": 18422656,
-    "blockTimestamp": 1698181199,
+    "buyerAddress": "0x77182f4F182432945B520e054d3a7b5AB2a83e22",
+    "sellerAddress": "0x1bc26892E4aE5bfe4e10e58a7e8154E4C3775AB7",
+    "blockNumber": 18422665,
+    "blockTimestamp": 1698181307,
     "contractAddress": "0xaD858bB4fb0A65AA5D5678e5977Cc6247f693E26",
-    "tokenId": 256,
+    "tokenId": 289,
     "sellerFee": {
-      "amount": 0.037,
+      "amount": 0.0486555,
       "tokenAddress": "0x0000000000000000000000000000000000000000"
     },
     "protocolFee": {
-      "amount": 0.001,
+      "amount": 0.0002445,
+      "tokenAddress": "0x0000000000000000000000000000000000000000"
+    }
+  },
+  {
+    "transactionHash": "0xfd96aa64b1c1a28a231d7c167a058fbce3d910152facf5114a9a0e07208f7d45",
+    "marketplace": "0x00000000000000adc04c56bf30ac9d3c0aaf14dc",
+    "buyerAddress": "0x77182f4F182432945B520e054d3a7b5AB2a83e22",
+    "sellerAddress": "0x40588aEb46e9d876455D906d055eBf2D032e612b",
+    "blockNumber": 18422665,
+    "blockTimestamp": 1698181307,
+    "contractAddress": "0xaD858bB4fb0A65AA5D5678e5977Cc6247f693E26",
+    "tokenId": 307,
+    "sellerFee": {
+      "amount": 0.047775,
       "tokenAddress": "0x0000000000000000000000000000000000000000"
     },
-    "royaltyFee": {
-      "amount": 0.0004,
+    "protocolFee": {
+      "amount": 0.001225,
+      "tokenAddress": "0x0000000000000000000000000000000000000000"
+    }
+  },
+  {
+    "transactionHash": "0xfd96aa64b1c1a28a231d7c167a058fbce3d910152facf5114a9a0e07208f7d45",
+    "marketplace": "0x00000000000000adc04c56bf30ac9d3c0aaf14dc",
+    "buyerAddress": "0x77182f4F182432945B520e054d3a7b5AB2a83e22",
+    "sellerAddress": "0x124640DD28c61DabE5E0422EEc3377DFDbA7B694",
+    "blockNumber": 18422665,
+    "blockTimestamp": 1698181307,
+    "contractAddress": "0xaD858bB4fb0A65AA5D5678e5977Cc6247f693E26",
+    "tokenId": 783,
+    "sellerFee": {
+      "amount": 0.0468,
+      "tokenAddress": "0x0000000000000000000000000000000000000000"
+    },
+    "protocolFee": {
+      "amount": 0.0012,
+      "tokenAddress": "0x0000000000000000000000000000000000000000"
+    }
+  },
+  {
+    "transactionHash": "0xfd96aa64b1c1a28a231d7c167a058fbce3d910152facf5114a9a0e07208f7d45",
+    "marketplace": "0x00000000000000adc04c56bf30ac9d3c0aaf14dc",
+    "buyerAddress": "0x77182f4F182432945B520e054d3a7b5AB2a83e22",
+    "sellerAddress": "0x124640DD28c61DabE5E0422EEc3377DFDbA7B694",
+    "blockNumber": 18422665,
+    "blockTimestamp": 1698181307,
+    "contractAddress": "0xaD858bB4fb0A65AA5D5678e5977Cc6247f693E26",
+    "tokenId": 784,
+    "sellerFee": {
+      "amount": 0.0468,
+      "tokenAddress": "0x0000000000000000000000000000000000000000"
+    },
+    "protocolFee": {
+      "amount": 0.0012,
+      "tokenAddress": "0x0000000000000000000000000000000000000000"
+    }
+  },
+  {
+    "transactionHash": "0xfd96aa64b1c1a28a231d7c167a058fbce3d910152facf5114a9a0e07208f7d45",
+    "marketplace": "0x00000000000000adc04c56bf30ac9d3c0aaf14dc",
+    "buyerAddress": "0x77182f4F182432945B520e054d3a7b5AB2a83e22",
+    "sellerAddress": "0x124640DD28c61DabE5E0422EEc3377DFDbA7B694",
+    "blockNumber": 18422665,
+    "blockTimestamp": 1698181307,
+    "contractAddress": "0xaD858bB4fb0A65AA5D5678e5977Cc6247f693E26",
+    "tokenId": 785,
+    "sellerFee": {
+      "amount": 0.0468,
+      "tokenAddress": "0x0000000000000000000000000000000000000000"
+    },
+    "protocolFee": {
+      "amount": 0.0012,
+      "tokenAddress": "0x0000000000000000000000000000000000000000"
+    }
+  },
+  {
+    "transactionHash": "0xfd96aa64b1c1a28a231d7c167a058fbce3d910152facf5114a9a0e07208f7d45",
+    "marketplace": "0x00000000000000adc04c56bf30ac9d3c0aaf14dc",
+    "buyerAddress": "0x77182f4F182432945B520e054d3a7b5AB2a83e22",
+    "sellerAddress": "0x124640DD28c61DabE5E0422EEc3377DFDbA7B694",
+    "blockNumber": 18422665,
+    "blockTimestamp": 1698181307,
+    "contractAddress": "0xaD858bB4fb0A65AA5D5678e5977Cc6247f693E26",
+    "tokenId": 786,
+    "sellerFee": {
+      "amount": 0.0468,
+      "tokenAddress": "0x0000000000000000000000000000000000000000"
+    },
+    "protocolFee": {
+      "amount": 0.0012,
       "tokenAddress": "0x0000000000000000000000000000000000000000"
     }
   }
