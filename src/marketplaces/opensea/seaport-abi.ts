@@ -1,11 +1,11 @@
-export type SeaportAbiEvents =
+export type SeaportABIEvents =
   | 'CounterIncremented'
   | 'OrderCancelled'
   | 'OrderFulfilled'
   | 'OrderValidated'
   | 'OrdersMatched';
 
-export type SeaportAbiMethodNames =
+export type SeaportABIMethodNames =
   | 'new'
   | 'cancel'
   | 'fulfillAdvancedOrder'

@@ -17,20 +17,20 @@ export function mapOrderFulfilledLog(
     recipient: args.recipient,
     offer: args.offer
       .toArray()
-      .map((offer: Result) => orderFulfilledOfferMapper(offer.toObject())),
+      .map((offer: Result) => mapOrderFulfilledOffer(offer.toObject())),
     consideration: args.consideration
       .toArray()
       .map((considerationItem: Result) => {
         const considerationItemObject = considerationItem.toObject();
         return {
-          ...orderFulfilledOfferMapper(considerationItemObject),
+          ...mapOrderFulfilledOffer(considerationItemObject),
           recipient: considerationItemObject.recipient,
         } as ConsiderationItem;
       }),
   };
 }
 
-function orderFulfilledOfferMapper(offer: Record<string, any>) {
+function mapOrderFulfilledOffer(offer: Record<string, any>) {
   const itemType = Number(offer.itemType) as ItemType;
   return {
     itemType,

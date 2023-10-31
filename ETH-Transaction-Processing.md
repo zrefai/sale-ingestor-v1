@@ -110,16 +110,14 @@ Data for this will come from Alchemy's Webhooks. Here is the query we are using:
 
 ```graphql
 {
-  block {
+  block(
+    hash: "0x2fe0cdb688253ae4e2ecf3a57459d77285557edbfe156836f23843435e0dec67"
+  ) {
     number
     timestamp
     gasLimit
     gasUsed
-    transactions(
-      filter: {
-        addresses: [{ to: "0x00000000000000adc04c56bf30ac9d3c0aaf14dc" }]
-      }
-    ) {
+    transactions {
       hash
       index
       from {
@@ -156,7 +154,7 @@ Data for this will come from Alchemy's Webhooks. Here is the query we are using:
 
 #### OpenSea Methods:
 
-- **0xa8174404** ('matchOrders'): Using ETH. ERC-721 sales. **_Almost_** each sale is for close to 0 ETH. Some of them are actually just transfers, not sales. Match an arbitrary number of orders, each with an arbitrary number of items for offer and consideration along with a set of fulfillments allocating offer components to consideration components.
+- **0xa8174404** ('matchOrders'): Using ETH. ERC-721 sales. **_Almost_** each sale is close to 0 ETH. Some of them are actually just transfers, not sales. Match an arbitrary number of orders, each with an arbitrary number of items for offer and consideration along with a set of fulfillments allocating offer components to consideration components.
 - **0xf2d12b12** (`matchAdvancedOrders`): Using WETH. ERC-721 sales.
 - **0xb3a34c4c** (`fulfillOrder`): Using ETH, ERC-721 sales but mentions that `onERC1155Recieved` needs to be relevant to receive ERC1155 tokens. Fulfill an order with an arbitrary number of items for offer and consideration. Note that this function does not support criteria-based orders or partial filling of orders (though filling the remainder of a partially-filled order is supported). Some outlier transactions under this method:
   - [0x91e326fc75a6f5780c1e0bbaa1d29289261f88d19889b35164fc47b791eac41c](https://etherscan.io/tx/0x91e326fc75a6f5780c1e0bbaa1d29289261f88d19889b35164fc47b791eac41c)
@@ -288,6 +286,28 @@ We can look at the example data payload above
 
 - **Blur Contract Address**: 0x000000000000Ad05Ccc4F10045630fb830B95127
 - **Topic for OrdersMatched Event**: 0x61cbb2a3dee0b6064c2e681aadd61677fb4ef319f0b547508d495626f5a62f64
+
+#### Blur Methods:
+
+##### Blur.io Marketplace: [0x000000000000Ad05Ccc4F10045630fb830B95127](https://etherscan.io/address/0x000000000000Ad05Ccc4F10045630fb830B95127)
+
+- **0xb3be57f8** (`bulkExecute`)
+- **0x9a1fc3a7** (`execute`)
+
+##### Blur.io Marketplace 2: [0x39da41747a83aeE658334415666f3EF92DD0D541](https://etherscan.io/address/0x39da41747a83aee658334415666f3ef92dd0d541)
+
+- **0x9a2b8115** (`batchBuyWithETH`)
+- **0x09ba153d** (`batchBuyWithERC20s`)
+  - [Transaction](https://etherscan.io/tx/0xea2e876e7c5e4fcd566b985c9332ec66b842981ba350b1ba4fcb66c907ad88ec#eventlog) where seaport was used to buy from Blur
+
+##### Blur.io Marketplace 3: [0xb2ecfE4E4D61f8790bbb9DE2D1259B9e2410CEA5](https://etherscan.io/address/0xb2ecfe4e4d61f8790bbb9de2d1259b9e2410cea5)
+
+- **0x3925c3c3** (`takeAsk`)
+- **0x133ba9a6** (`takeAskPool`)
+- **0x70bce2d6** (`takeAskSingle`)
+- **0x336d8206** (`takeAskSinglePool`)
+- **0x7034d120** (`takeBid`)
+- **0xda815cb5** (`takeBidSingle`)
 
 Checking the logs on a Blur transaction, we should find an OrdersMatched event. This marks a sale.
 

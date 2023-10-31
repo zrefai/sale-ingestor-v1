@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "generate-abi": "abi-types-generator ./ingestors/opensea/seaport-abi.json"
+    "generate-abi": "abi-types-generator './ingestors/blur/blur-abi.json' --output='./ingestors/blur/blur-types'"
   },
   "author": "",
   "license": "ISC",

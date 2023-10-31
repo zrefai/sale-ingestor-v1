@@ -1,4 +1,71 @@
-export const blurExchangeABI = [
+export type BlurExchangeABIEvents =
+  | 'AdminChanged'
+  | 'BeaconUpgraded'
+  | 'Closed'
+  | 'Initialized'
+  | 'NewBlockRange'
+  | 'NewExecutionDelegate'
+  | 'NewFeeRate'
+  | 'NewFeeRecipient'
+  | 'NewGovernor'
+  | 'NewOracle'
+  | 'NewPolicyManager'
+  | 'NonceIncremented'
+  | 'Opened'
+  | 'OrderCancelled'
+  | 'OrdersMatched'
+  | 'OwnershipTransferred'
+  | 'Upgraded';
+
+export type BlurExchangeABIMethodNames =
+  | 'FEE_TYPEHASH'
+  | 'INVERSE_BASIS_POINT'
+  | 'NAME'
+  | 'ORACLE_ORDER_TYPEHASH'
+  | 'ORDER_TYPEHASH'
+  | 'POOL'
+  | 'ROOT_TYPEHASH'
+  | 'VERSION'
+  | 'WETH'
+  | '_execute'
+  | 'blockRange'
+  | 'bulkExecute'
+  | 'cancelOrder'
+  | 'cancelOrders'
+  | 'cancelledOrFilled'
+  | 'close'
+  | 'execute'
+  | 'executionDelegate'
+  | 'feeRate'
+  | 'feeRecipient'
+  | 'governor'
+  | 'incrementNonce'
+  | 'initialize'
+  | 'isInternal'
+  | 'isOpen'
+  | 'nonces'
+  | 'open'
+  | 'oracle'
+  | 'owner'
+  | 'policyManager'
+  | 'proxiableUUID'
+  | 'remainingETH'
+  | 'renounceOwnership'
+  | 'setBlockRange'
+  | 'setExecutionDelegate'
+  | 'setFeeRate'
+  | 'setFeeRecipient'
+  | 'setGovernor'
+  | 'setOracle'
+  | 'setPolicyManager'
+  | 'transferOwnership'
+  | 'upgradeTo'
+  | 'upgradeToAndCall';
+
+export const ORDERS_MATCHED_KECCAK_HASH =
+  '0x61cbb2a3dee0b6064c2e681aadd61677fb4ef319f0b547508d495626f5a62f64';
+
+export const blurMarketplaceABI = [
   {
     inputs: [],
     stateMutability: 'nonpayable',
