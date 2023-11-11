@@ -1,15 +1,15 @@
 import { Block } from 'src/models/block';
 import { Transaction } from 'src/models/transaction';
-import { blurMarketplaceInterface } from './ABIs/abi-interfaces';
+import { blurMarketplaceInterface } from '../ABIs/abi-interfaces';
 import { parseEther } from 'ethers';
 import {
   BlurExchangeABIMethodNames,
   ORDERS_MATCHED_KECCAK_HASH,
-} from './ABIs/blur-abi';
+} from '../ABIs/blur-abi';
 import { Log } from 'src/models/log';
-import util from 'util';
-import { mapOrdersMatchedLog } from './mappers/map-orders-matched-log';
-import { OrdersMatchedLog } from './models/orders-matched';
+import { mapOrdersMatchedLog } from '../mappers/map-orders-matched-log';
+import { OrdersMatchedLog } from '../models/orders-matched';
+import { mapBlurTransactionToSale } from '../mappers/map-blur-transaction-to-sale';
 
 /**
  * bulkExecute transactions:
@@ -33,10 +33,8 @@ export function ingestBlurMarketplaceTransaction(
   switch (parsedTransaction?.name as BlurExchangeABIMethodNames) {
     case 'execute': {
       const ordersMatchedLogs = parseTransactionLogs(transaction.logs);
-      console.log(util.inspect(ordersMatchedLogs, false, null, true));
-      return [];
+      return mapBlurTransactionToSale(block, transaction, ordersMatchedLogs);
     }
-    case 'bulkExecute':
     default:
       return [];
   }

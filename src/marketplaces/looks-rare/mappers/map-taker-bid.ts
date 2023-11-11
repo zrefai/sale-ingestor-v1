@@ -1,5 +1,5 @@
 import { LogDescription, formatEther } from 'ethers';
-import { TakerBidLog } from './models/taker-bid';
+import { TakerBidLog } from '../models/taker-bid';
 
 export function mapTakerBid(parsedLog: LogDescription): TakerBidLog {
   const args = parsedLog.args.toObject();

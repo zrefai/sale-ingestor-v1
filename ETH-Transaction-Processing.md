@@ -69,10 +69,6 @@ A method can help us idenfity the kind of transaction that occurred. Although we
 
 To determine what method is being used in a transaction, we can take a look at the first 8 digits in the input data of a transaction
 
-- **Blur Methods**:
-- **LooksRare Methods**:
-- **X2Y2 Methods**:
-
 **We are looking to process the data fields from specific events from specific contracts. These data fields contain all the data we need about a transaction.**
 
 - Data fields can look like this:
@@ -111,7 +107,7 @@ Data for this will come from Alchemy's Webhooks. Here is the query we are using:
 ```graphql
 {
   block(
-    hash: "0x2fe0cdb688253ae4e2ecf3a57459d77285557edbfe156836f23843435e0dec67"
+    hash: "0xfe34c849b4b9e98d86a7f9a03c8960a39074f4f889b69cdf43e4b5fe78c86461"
   ) {
     number
     timestamp
@@ -154,7 +150,7 @@ Data for this will come from Alchemy's Webhooks. Here is the query we are using:
 
 #### OpenSea Methods:
 
-- **0xa8174404** ('matchOrders'): Using ETH. ERC-721 sales. **_Almost_** each sale is close to 0 ETH. Some of them are actually just transfers, not sales. Match an arbitrary number of orders, each with an arbitrary number of items for offer and consideration along with a set of fulfillments allocating offer components to consideration components.
+- **0xa8174404** (`matchOrders`): Using ETH. ERC-721 sales. **_Almost_** each sale is close to 0 ETH. Some of them are actually just transfers, not sales. Match an arbitrary number of orders, each with an arbitrary number of items for offer and consideration along with a set of fulfillments allocating offer components to consideration components.
 - **0xf2d12b12** (`matchAdvancedOrders`): Using WETH. ERC-721 sales.
 - **0xb3a34c4c** (`fulfillOrder`): Using ETH, ERC-721 sales but mentions that `onERC1155Recieved` needs to be relevant to receive ERC1155 tokens. Fulfill an order with an arbitrary number of items for offer and consideration. Note that this function does not support criteria-based orders or partial filling of orders (though filling the remainder of a partially-filled order is supported). Some outlier transactions under this method:
   - [0x91e326fc75a6f5780c1e0bbaa1d29289261f88d19889b35164fc47b791eac41c](https://etherscan.io/tx/0x91e326fc75a6f5780c1e0bbaa1d29289261f88d19889b35164fc47b791eac41c)
@@ -493,6 +489,10 @@ f8d05c3fcdf0025321026d475c5a466bb7da9038a86ab143f2362ec12deb5f8e
 
 - **LooksRare Contract Address**: 0x0000000000E655fAe4d56241588680F86E3b2377
 - **Topic for TakerBid Event**: 0x3ee3de4684413690dee6fff1a0a4f92916a1b97d1c5a83cdf24671844306b2e3
+
+#### LooksRare Methods:
+
+- **0x760f2a0b** (`execute`)
 
 Checking the logs on a LooksRare transaction, we should find a TakerBid Event. This marks a sale even though etherscan labels it as a Transfer. It is emitted when a taker bid transaction is completed.
 

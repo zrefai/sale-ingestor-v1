@@ -53,6 +53,9 @@ export type BlurExchange3ABIMethods =
   | 'upgradeToAndCall'
   | 'verifyDomain';
 
+export const EXECUTION_721_PACKED_KECCAK_HASH =
+  '0x1d5e12b51dee5e4d34434576c3fb99714a85f57b0fd546ada4b0bddd736d12b2';
+
 export const blurMarketplace3ABI = [
   {
     inputs: [
