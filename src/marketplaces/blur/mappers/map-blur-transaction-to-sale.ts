@@ -4,6 +4,13 @@ import { OrdersMatchedLog } from '../models/orders-matched';
 import { Sale } from 'src/models/sale';
 import { Marketplace } from 'src/models/marketplace';
 
+/**
+ * Converts the OrdersMatched logs into Sales.
+ * @param block The block the transaction occurred in.
+ * @param transaction The transaction the OrdersMatched logs occurred in.
+ * @param ordersMatchedLogs The list of OrdersMatched logs from a transaction.
+ * @returns A list of Sales.
+ */
 export function mapBlurTransactionToSale(
   block: Block,
   transaction: Transaction,
@@ -32,5 +39,6 @@ function mapOrdersMatchedToSale(
       amount: ordersMatchedLog.buy.price,
       tokenAddress: ordersMatchedLog.buy.paymentToken,
     },
+    // Protocol fees are not mapped because BLUR doesn't take fees.
   };
 }

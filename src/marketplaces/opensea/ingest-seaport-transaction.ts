@@ -16,6 +16,7 @@ import { mapSeaportTransactionToSale } from './mappers/map-seaport-transaction-t
 
 /**
  * Given a valid transaction executed using the appropriate ABI method, it will return a list of sales that occurred during this transaction.
+ * @param block The block the transaction occurred in
  * @param transaction A ETH blockchain transaction
  * @returns A list of sales that occurred during the transaction
  */
@@ -56,10 +57,10 @@ export function ingestSeaportTransaction(
 }
 
 /**
- * Parses transactions logs into a more readable format using ethers. OrderFulfilled and OrdersMatched logs are the only logs parsed. Any other logs we do not need.
- * @param logs The logs of a transaction to parse
- * @param transactionHash Hash of the transaction, used for error handling
- * @returns Object that contains the OrderFulfilled logs and OrdersMatched log if it is available
+ * Parses transactions logs into a more readable format using ethers. OrderFulfilled and OrdersMatched logs are the only logs parsed.
+ * @param logs The logs of a transaction to parse.
+ * @param transactionHash Hash of the transaction, used for error handling.
+ * @returns Object that contains the OrderFulfilled logs and OrdersMatched log if it is available.
  */
 function parseTransactionLogs(
   logs: Log[],

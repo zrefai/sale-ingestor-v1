@@ -1,5 +1,4 @@
-import { ingestBlurMarketplaceTransaction } from './marketplaces/blur/ingestors/ingest-blur-marketplace-transaction';
-import { ingestLooksRareTransaction } from './marketplaces/looks-rare/ingest-looks-rare-transaction';
+import { ingestBlurMarketplaceTransaction } from './marketplaces/blur/ingest-blur-marketplace-transaction';
 import { ingestSeaportTransaction } from './marketplaces/opensea/ingest-seaport-transaction';
 import { Block } from './models/block';
 import { Marketplace } from './models/marketplace';
@@ -14,7 +13,12 @@ export function ingestTransactions(block: Block): Sale[] {
   for (const transaction of transactions) {
     // When transaction status is 0, that means the transaction was cancelled on the blockchain
     if (transaction && transaction.status === 1) {
-      sales.push(...ingestTransactionsForMarketplace(block, transaction));
+      try {
+        sales.push(...ingestTransactionsForMarketplace(block, transaction));
+      } catch (err) {
+        console.error(`Could not process transaction for ${transaction.hash}`);
+        console.error(`Error occurred: ${err}`);
+      }
     }
   }
 
