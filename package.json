@@ -5,8 +5,7 @@
   "main": "index.ts",
   "type": "module",
   "scripts": {
-    "start": "tsx src/index.ts",
-    "generate-abi": "abi-types-generator './ingestors/blur/blur-abi.json' --output='./ingestors/blur/blur-types'"
+    "start": "tsx src/index.ts"
   },
   "author": "",
   "license": "ISC",
